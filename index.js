@@ -5,7 +5,12 @@ const config = require('./config');
 const restify = require('restify');
 const mongoose = require('mongoose');
 const restifyPlugins = require('restify-plugins');
+const corsMiddleware = require('restify-cors-middleware');
 
+const cors = corsMiddleware({
+  preflightMaxAge: 5, //Optional
+  origins: ['*']
+})
 /**
   * Initialize Server
   */
@@ -22,6 +27,8 @@ restifyAcceptParser = require('restify-plugins').acceptParser,
 restifyQueryParser = require('restify-plugins').queryParser,
 restifyFullResponse = require('restify-plugins').fullResponse;
 
+server.pre(cors.preflight)
+server.use(cors.actual)
 server.use(restifyBodyParser());
 server.use(restifyAcceptParser(server.acceptable));
 server.use(restifyQueryParser({ mapParams: true }));
@@ -43,7 +50,7 @@ server.listen(config.port, () => {
 	    process.exit(1);
 	});
 
-	db.once('open', () => {
+	db.once('open', () => {	    
 	    require('./routes').init(server);
 	    console.log(`Server is listening on port ${config.port}`);
 	});
