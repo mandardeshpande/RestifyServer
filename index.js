@@ -4,12 +4,14 @@
 const config = require('./config');
 const restify = require('restify');
 const mongoose = require('mongoose');
+const cookieParser = require('restify-cookies');
 const restifyPlugins = require('restify-plugins');
 const corsMiddleware = require('restify-cors-middleware');
 
 const cors = corsMiddleware({
   preflightMaxAge: 5, //Optional
-  origins: ['*']
+  origins: ['*'],
+  'Access-Control-Allow-Credentials':true
 })
 /**
   * Initialize Server
@@ -28,6 +30,7 @@ restifyQueryParser = require('restify-plugins').queryParser,
 restifyFullResponse = require('restify-plugins').fullResponse;
 
 server.pre(cors.preflight)
+server.use(cookieParser.parse)
 server.use(cors.actual)
 server.use(restifyBodyParser());
 server.use(restifyAcceptParser(server.acceptable));

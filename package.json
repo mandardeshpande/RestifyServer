@@ -17,5 +17,8 @@
     "restify-cors-middleware": "^1.1.0",
     "restify-errors": "^6.0.0",
     "restify-plugins": "^1.6.0"
+  },
+  "devDependencies": {
+    "restify-cookies": "^0.2.5"
   }
 }
