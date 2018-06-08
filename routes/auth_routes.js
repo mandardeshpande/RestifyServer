@@ -44,8 +44,6 @@ module.exports = function(server) {
 	});
 
 	server.post('/authenticate', (req, res, next) => {
-
-		console.log(auth_header);
 		if(!auth_header(req.headers['authorization'])) {
 			
 				var err = new Error('authorization failed.');
@@ -64,12 +62,7 @@ module.exports = function(server) {
 		let user = new User(data);
 		const password = user.password;
 
-		let info = {
-			sessionToken: Math.random().toString(12).substring(2, 20),
-			objectId: user.email
-		}
-
-		_setSessionCookie(res, info);
+		
 
 		User.findOne({ email: user.email }).exec(function (err, user) {
 			if (err) {
@@ -83,6 +76,11 @@ module.exports = function(server) {
       		
       bcrypt.compare(password, user.password, function (err, result) {
         if (result === true) {
+        	let info = {
+			sessionToken: Math.random().toString(12).substring(2, 20),
+			objectId: user.email
+		}
+		_setSessionCookie(res, info);
           res.send({login: true, message:'login success'});          
           next();
         } else {
@@ -93,4 +91,15 @@ module.exports = function(server) {
     });
 
 	});
+
+
+	server.post('/logout', (req, res, next) => {
+		res.clearCookie('sessionToken');
+		res.clearCookie('objectId');
+		res.send({login: false, message:'logout success'});          
+        next();
+	});
+
+
+
 };    

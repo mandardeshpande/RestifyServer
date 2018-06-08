@@ -10,8 +10,9 @@ const corsMiddleware = require('restify-cors-middleware');
 
 const cors = corsMiddleware({
   preflightMaxAge: 5, //Optional
-  origins: ['*'],
-  'Access-Control-Allow-Credentials':true
+  origins: ['http://localhost:3001'],
+  allowHeaders: ['authorization'],
+  credentials:true
 })
 /**
   * Initialize Server
